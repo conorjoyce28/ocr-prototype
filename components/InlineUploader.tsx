@@ -9,14 +9,21 @@ import { DocumentScan } from "./DocumentScan";
 interface Props {
   files: UploadedFile[];
   cells: MonthCell[];
+  demoSpan: number;
   onUpload: (fileName: string, sizeKb: number, options?: UploadOptions) => void;
   onParseComplete: (fileId: string) => void;
   onRemoveFile: (fileId: string) => void;
 }
 
-export function InlineUploader({ files, cells, onUpload, onParseComplete, onRemoveFile }: Props) {
+export function InlineUploader({
+  files,
+  cells,
+  demoSpan,
+  onUpload,
+  onParseComplete,
+  onRemoveFile,
+}: Props) {
   const [dragOver, setDragOver] = useState(false);
-  const [demoSpan, setDemoSpan] = useState(1);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const parsingFiles = files.filter((f) => f.state === "parsing");
@@ -29,11 +36,6 @@ export function InlineUploader({ files, cells, onUpload, onParseComplete, onRemo
     Array.from(fileList).forEach((f) => {
       onUpload(f.name, Math.round(f.size / 102.4) / 10, { span: demoSpan });
     });
-  }
-
-  function handleDemoDrop(fail = false) {
-    const stamp = new Date().toISOString().slice(0, 10) + "-" + Math.random().toString(36).slice(2, 4);
-    onUpload(`statement-${stamp}.pdf`, 138.4 + Math.random() * 60, { span: demoSpan, fail });
   }
 
   return (
@@ -146,46 +148,6 @@ export function InlineUploader({ files, cells, onUpload, onParseComplete, onRemo
           )}
         </AnimatePresence>
       </label>
-
-      {!allCovered && (
-        <div className="flex items-center justify-between gap-3 text-[12px] bg-ink-50 border border-ink-200 rounded-lg px-3 py-2.5">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-ink-500 font-medium">Demo</span>
-            <span className="text-ink-300">·</span>
-            <label className="flex items-center gap-2">
-              <span className="text-ink-700">Statement covers</span>
-              <select
-                value={demoSpan}
-                onChange={(e) => setDemoSpan(parseInt(e.target.value, 10))}
-                className="text-[12px] border border-ink-300 rounded-md px-2 py-1 bg-card text-ink-900 font-medium tabular-nums focus:outline-none focus:border-accent"
-              >
-                {[1, 2, 3, 4, 5, 6].map((n) => (
-                  <option key={n} value={n}>
-                    {n} month{n > 1 ? "s" : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => handleDemoDrop(false)}
-              className="text-[12px] font-medium text-accent hover:text-[color:var(--color-accent-deep)] px-2 py-1"
-            >
-              Drop sample
-            </button>
-            <span className="text-ink-300">·</span>
-            <button
-              type="button"
-              onClick={() => handleDemoDrop(true)}
-              className="text-[12px] font-medium text-[var(--color-gap)] hover:opacity-80 px-2 py-1"
-            >
-              Drop failure
-            </button>
-          </div>
-        </div>
-      )}
 
       {settledFiles.length > 0 && (
         <div className="space-y-2.5">

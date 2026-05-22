@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CoverageChart } from "./CoverageChart";
 import { WeekHeatmap } from "./WeekHeatmap";
@@ -48,6 +48,12 @@ export function UploadDrawer({
   const covered = cells.filter((c) => c.status === "covered").length;
   const total = cells.length;
   const allCovered = covered === total;
+  const [demoSpan, setDemoSpan] = useState(1);
+
+  function handleDemoDrop(fail = false) {
+    const stamp = new Date().toISOString().slice(0, 10) + "-" + Math.random().toString(36).slice(2, 4);
+    onUpload(`statement-${stamp}.pdf`, 138.4 + Math.random() * 60, { span: demoSpan, fail });
+  }
 
   return (
     <AnimatePresence>
@@ -114,10 +120,53 @@ export function UploadDrawer({
               <InlineUploader
                 files={files}
                 cells={cells}
+                demoSpan={demoSpan}
                 onUpload={onUpload}
                 onParseComplete={onParseComplete}
                 onRemoveFile={onRemoveFile}
               />
+            </div>
+
+            <div className="border-t border-dashed border-ink-200 bg-ink-50 px-6 py-2.5 flex items-center justify-between gap-3 text-[12px] shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-ink-500 font-medium shrink-0">
+                  Demo
+                </span>
+                <span className="text-ink-300 shrink-0">·</span>
+                <label className="flex items-center gap-2 min-w-0">
+                  <span className="text-ink-700 shrink-0">Statement covers</span>
+                  <select
+                    value={demoSpan}
+                    onChange={(e) => setDemoSpan(parseInt(e.target.value, 10))}
+                    className="text-[12px] border border-ink-300 rounded-md px-2 py-1 bg-card text-ink-900 font-medium tabular-nums focus:outline-none focus:border-accent"
+                  >
+                    {[1, 2, 3, 4, 5, 6].map((n) => (
+                      <option key={n} value={n}>
+                        {n} month{n > 1 ? "s" : ""}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => handleDemoDrop(false)}
+                  disabled={allCovered}
+                  className="text-[12px] font-medium text-accent hover:text-[color:var(--color-accent-deep)] px-2 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Drop sample
+                </button>
+                <span className="text-ink-300">·</span>
+                <button
+                  type="button"
+                  onClick={() => handleDemoDrop(true)}
+                  disabled={allCovered}
+                  className="text-[12px] font-medium text-[var(--color-gap)] hover:opacity-80 px-2 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Drop failure
+                </button>
+              </div>
             </div>
 
             <footer className="border-t border-ink-200 px-6 h-[80px] flex items-center justify-between bg-card shrink-0">
