@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CoverageChart } from "./CoverageChart";
-import { WeekHeatmap } from "./WeekHeatmap";
+import { MonthProgressBar } from "./MonthProgressBar";
 import { InlineUploader } from "./InlineUploader";
 import type { MonthCell, UploadedFile, UploadOptions } from "@/lib/types";
 
@@ -112,7 +112,7 @@ export function UploadDrawer({
               </p>
 
               {visualization === "calendar" ? (
-                <WeekHeatmap cells={cells} />
+                <MonthProgressBar cells={cells} />
               ) : (
                 <CoverageChart cells={cells} />
               )}

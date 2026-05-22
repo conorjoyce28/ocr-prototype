@@ -418,31 +418,39 @@ function LinePreview() {
 }
 
 function CalendarPreview() {
-  const blocks: Array<"on" | "off" | "fail"> = [
-    "on", "on", "on", "on",
-    "on", "on", "on", "on",
-    "off", "off", "off", "off",
-    "fail", "fail", "fail", "fail",
-    "on", "on", "on", "on",
-    "off", "off", "off", "off",
-  ];
+  const states: Array<"on" | "off" | "fail"> = ["on", "on", "off", "on", "off", "on"];
   return (
-    <div className="rounded-md bg-ink-50 border border-ink-200 p-2 h-[58px] flex items-center gap-2">
-      {Array.from({ length: 6 }).map((_, m) => (
-        <div key={m} className="flex gap-[2px] flex-1">
-          {blocks.slice(m * 4, m * 4 + 4).map((b, i) => (
-            <span
+    <div className="rounded-md bg-ink-50 border border-ink-200 p-3 h-[58px] flex flex-col justify-center gap-2">
+      <div className="relative h-1.5 rounded-full overflow-hidden bg-ink-200">
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(90deg, #001eff 0%, #5b8cff 60%, #3dc8ff 100%)" }}
+        />
+        <div className="absolute inset-0 flex">
+          {states.map((s, i) => (
+            <div
               key={i}
-              className="flex-1 h-6 rounded-[2px] border"
+              className="flex-1"
               style={{
-                background: b === "on" ? "var(--color-accent)" : b === "fail" ? "var(--color-gap)" : "transparent",
-                borderColor: b === "fail" ? "var(--color-gap)" : b === "off" ? "var(--color-gap)" : "var(--color-accent)",
-                borderStyle: b === "off" ? "dashed" : "solid",
+                background:
+                  s === "on" ? "transparent" : s === "fail" ? "var(--color-gap)" : "var(--color-ink-100)",
               }}
             />
           ))}
         </div>
-      ))}
+      </div>
+      <div className="flex gap-1">
+        {states.map((s, i) => (
+          <div
+            key={i}
+            className={`flex-1 text-[7px] uppercase tracking-[0.08em] text-center ${
+              s === "on" ? "text-ink-500" : s === "fail" ? "text-[var(--color-gap)]" : "text-ink-400"
+            }`}
+          >
+            {s === "off" ? "Gap" : s === "fail" ? "Fail" : ["D", "J", "F", "M", "A", "M"][i]}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
