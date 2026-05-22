@@ -3,13 +3,15 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CoverageChart } from "./CoverageChart";
+import { WeekHeatmap } from "./WeekHeatmap";
 import { InlineUploader } from "./InlineUploader";
-import type { MonthCell, UploadedFile } from "@/lib/types";
+import type { MonthCell, UploadedFile, UploadOptions } from "@/lib/types";
 
-import type { UploadOptions } from "@/lib/types";
+export type DrawerVisualization = "line" | "calendar";
 
 interface Props {
   open: boolean;
+  visualization: DrawerVisualization;
   onClose: () => void;
   cells: MonthCell[];
   files: UploadedFile[];
@@ -21,6 +23,7 @@ interface Props {
 
 export function UploadDrawer({
   open,
+  visualization,
   onClose,
   cells,
   files,
@@ -78,9 +81,14 @@ export function UploadDrawer({
                   <path d="M2 2l10 10M12 2 2 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
                 </svg>
               </button>
-              <h2 className="text-[20px] leading-tight font-medium text-ink-900 tracking-tight">
-                Upload bank statements
-              </h2>
+              <div className="min-w-0">
+                <h2 className="text-[20px] leading-tight font-medium text-ink-900 tracking-tight">
+                  Upload bank statements
+                </h2>
+                <div className="text-[11px] uppercase tracking-[0.14em] text-ink-500 mt-0.5">
+                  {visualization === "calendar" ? "Calendar view" : "Line diagram"}
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={onReset}
@@ -97,7 +105,11 @@ export function UploadDrawer({
                 accounts.
               </p>
 
-              <CoverageChart cells={cells} />
+              {visualization === "calendar" ? (
+                <WeekHeatmap cells={cells} />
+              ) : (
+                <CoverageChart cells={cells} />
+              )}
 
               <InlineUploader
                 files={files}

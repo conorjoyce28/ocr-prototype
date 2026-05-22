@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import type { MonthCell, UploadedFile, UploadOptions } from "@/lib/types";
 import { ParseAnimation } from "./ParseAnimation";
+import { DocumentScan } from "./DocumentScan";
 
 interface Props {
   files: UploadedFile[];
@@ -119,24 +120,26 @@ export function InlineUploader({ files, cells, onUpload, onParseComplete, onRemo
                   className={idx > 0 ? "pt-4 border-t border-ink-200" : ""}
                   onClick={(e) => e.preventDefault()}
                 >
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="flex items-start gap-2.5 min-w-0">
-                      <FileGlyph />
-                      <div className="min-w-0">
-                        <div className="text-[13px] text-ink-900 font-medium truncate">
-                          {file.fileName}
+                  <div className="flex items-start gap-4">
+                    <DocumentScan file={file} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="min-w-0">
+                          <div className="text-[13px] text-ink-900 font-medium truncate">
+                            {file.fileName}
+                          </div>
+                          <div className="text-[11.5px] text-ink-500 mt-0.5 tabular-nums">
+                            {file.sizeKb.toFixed(1)} KB · {file.spanMonths} month
+                            {file.spanMonths > 1 ? "s" : ""}
+                          </div>
                         </div>
-                        <div className="text-[11.5px] text-ink-500 mt-0.5 tabular-nums">
-                          {file.sizeKb.toFixed(1)} KB · {file.spanMonths} month
-                          {file.spanMonths > 1 ? "s" : ""}
-                        </div>
+                        <span className="text-[11px] uppercase tracking-[0.1em] text-accent font-medium shrink-0">
+                          Reading
+                        </span>
                       </div>
+                      <ParseAnimation file={file} onComplete={() => onParseComplete(file.id)} />
                     </div>
-                    <span className="text-[11px] uppercase tracking-[0.1em] text-accent font-medium">
-                      Reading
-                    </span>
                   </div>
-                  <ParseAnimation file={file} onComplete={() => onParseComplete(file.id)} />
                 </div>
               ))}
             </motion.div>

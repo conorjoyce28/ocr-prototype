@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { UploadDrawer } from "@/components/UploadDrawer";
+import { UploadDrawer, type DrawerVisualization } from "@/components/UploadDrawer";
 import { buildGoalWindow, findFirstUploadableRun } from "@/lib/months";
 import { extractedFor, pickFailureReason, resetAccountCursor } from "@/lib/fixtures";
 import type { MonthCell, UploadedFile, UploadOptions } from "@/lib/types";
@@ -14,6 +14,12 @@ export default function Page() {
   );
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [visualization, setVisualization] = useState<DrawerVisualization>("line");
+
+  const openDrawer = useCallback((viz: DrawerVisualization) => {
+    setVisualization(viz);
+    setDrawerOpen(true);
+  }, []);
 
   const handleUpload = useCallback(
     (fileName: string, sizeKb: number, options: UploadOptions = {}) => {
@@ -109,7 +115,7 @@ export default function Page() {
               We use your banking data to assess your application and build your offer.
             </p>
 
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
               <OptionCard
                 tag="Recommended"
                 title="Connect your bank"
@@ -119,16 +125,22 @@ export default function Page() {
                 variant="primary"
               />
               <OptionCard
-                tag="Alternative"
+                tag="Line diagram"
                 title="Upload statements"
-                subtitle={
-                  covered > 0
-                    ? `${covered} of ${cells.length} months covered. Continue uploading.`
-                    : "We read each statement live and validate against the six month goal."
-                }
-                cta="Upload statements"
-                onClick={() => setDrawerOpen(true)}
-                variant={covered > 0 ? "in-progress" : "secondary"}
+                subtitle="See coverage as a transaction line across the six month window."
+                cta="Open line view"
+                onClick={() => openDrawer("line")}
+                variant={covered > 0 && visualization === "line" ? "in-progress" : "secondary"}
+                preview={<LinePreview />}
+              />
+              <OptionCard
+                tag="Calendar view"
+                title="Upload statements"
+                subtitle="See coverage as weekly blocks. Two empty blocks in a row is a 14 day gap."
+                cta="Open calendar view"
+                onClick={() => openDrawer("calendar")}
+                variant={covered > 0 && visualization === "calendar" ? "in-progress" : "secondary"}
+                preview={<CalendarPreview />}
               />
             </div>
 
@@ -150,6 +162,7 @@ export default function Page() {
 
       <UploadDrawer
         open={drawerOpen}
+        visualization={visualization}
         onClose={() => setDrawerOpen(false)}
         cells={cells}
         files={files}
@@ -340,6 +353,7 @@ function OptionCard({
   cta,
   onClick,
   variant,
+  preview,
 }: {
   tag: string;
   title: string;
@@ -347,6 +361,7 @@ function OptionCard({
   cta: string;
   onClick: () => void;
   variant: "primary" | "secondary" | "in-progress";
+  preview?: React.ReactNode;
 }) {
   const border =
     variant === "primary"
@@ -355,8 +370,8 @@ function OptionCard({
       ? "border-accent/60"
       : "border-ink-300";
   return (
-    <div className={`rounded-xl bg-card border ${border} px-6 pt-5 pb-6 flex flex-col`}>
-      <div className="flex items-start justify-between gap-2 mb-4">
+    <div className={`rounded-xl bg-card border ${border} px-5 pt-4 pb-5 flex flex-col`}>
+      <div className="flex items-start justify-between gap-2 mb-3">
         <span className="text-[11px] uppercase tracking-[0.14em] text-ink-500">{tag}</span>
         {variant === "in-progress" && (
           <span className="text-[10.5px] uppercase tracking-[0.12em] font-medium px-2 py-1 rounded-full bg-accent-soft text-accent">
@@ -364,12 +379,13 @@ function OptionCard({
           </span>
         )}
       </div>
-      <div className="text-[20px] tracking-tight text-ink-900 font-medium leading-tight">{title}</div>
-      <div className="mt-1.5 text-[13.5px] text-ink-500 leading-snug flex-1">{subtitle}</div>
+      <div className="text-[18px] tracking-tight text-ink-900 font-medium leading-tight">{title}</div>
+      <div className="mt-1 text-[12.5px] text-ink-500 leading-snug">{subtitle}</div>
+      {preview && <div className="mt-4">{preview}</div>}
       <button
         type="button"
         onClick={onClick}
-        className={`mt-6 w-full py-3 rounded-full text-[13.5px] font-medium transition-colors ${
+        className={`mt-5 w-full py-2.5 rounded-full text-[13px] font-medium transition-colors ${
           variant === "primary"
             ? "border border-accent text-accent hover:bg-accent-soft"
             : "border border-ink-300 text-ink-900 hover:border-ink-900 hover:bg-ink-100"
@@ -377,6 +393,56 @@ function OptionCard({
       >
         {cta}
       </button>
+    </div>
+  );
+}
+
+function LinePreview() {
+  return (
+    <div className="rounded-md bg-ink-50 border border-ink-200 p-2 h-[58px] overflow-hidden">
+      <svg viewBox="0 0 120 36" className="w-full h-full">
+        <defs>
+          <linearGradient id="lp-fade" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d="M0 24 Q 10 12 20 18 T 40 14 T 60 22 L 60 36 L 0 36 Z" fill="url(#lp-fade)" />
+        <path d="M0 24 Q 10 12 20 18 T 40 14 T 60 22" stroke="var(--color-accent)" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+        <rect x="64" y="6" width="14" height="24" fill="var(--color-gap-soft)" stroke="var(--color-gap)" strokeWidth="1" strokeDasharray="3 2" rx="2" />
+        <rect x="80" y="6" width="14" height="24" fill="var(--color-gap-soft)" stroke="var(--color-gap)" strokeWidth="1" strokeDasharray="3 2" rx="2" />
+        <path d="M96 22 Q 104 16 112 18 L 120 18" stroke="var(--color-accent)" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+      </svg>
+    </div>
+  );
+}
+
+function CalendarPreview() {
+  const blocks: Array<"on" | "off" | "fail"> = [
+    "on", "on", "on", "on",
+    "on", "on", "on", "on",
+    "off", "off", "off", "off",
+    "fail", "fail", "fail", "fail",
+    "on", "on", "on", "on",
+    "off", "off", "off", "off",
+  ];
+  return (
+    <div className="rounded-md bg-ink-50 border border-ink-200 p-2 h-[58px] flex items-center gap-2">
+      {Array.from({ length: 6 }).map((_, m) => (
+        <div key={m} className="flex gap-[2px] flex-1">
+          {blocks.slice(m * 4, m * 4 + 4).map((b, i) => (
+            <span
+              key={i}
+              className="flex-1 h-6 rounded-[2px] border"
+              style={{
+                background: b === "on" ? "var(--color-accent)" : b === "fail" ? "var(--color-gap)" : "transparent",
+                borderColor: b === "fail" ? "var(--color-gap)" : b === "off" ? "var(--color-gap)" : "var(--color-accent)",
+                borderStyle: b === "off" ? "dashed" : "solid",
+              }}
+            />
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
