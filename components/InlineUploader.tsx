@@ -24,7 +24,16 @@ export function InlineUploader({
   onRemoveFile,
 }: Props) {
   const [dragOver, setDragOver] = useState(false);
+  const [escapeOpen, setEscapeOpen] = useState(false);
+  const [escapeText, setEscapeText] = useState("");
+  const [escapeSent, setEscapeSent] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  function submitEscape() {
+    if (!escapeText.trim()) return;
+    setEscapeSent(true);
+    setEscapeOpen(false);
+  }
 
   const parsingFiles = files.filter((f) => f.state === "parsing");
   const settledFiles = files.filter((f) => f.state !== "parsing");
@@ -172,15 +181,95 @@ export function InlineUploader({
         </div>
       )}
 
-      <div className="flex items-center justify-end text-[12px]">
-        <a
-          className="text-ink-500 hover:text-ink-900 transition-colors"
-          href="#"
-          onClick={(e) => e.preventDefault()}
-        >
-          I cannot provide this →
-        </a>
-      </div>
+      <AnimatePresence mode="wait" initial={false}>
+        {escapeSent ? (
+          <motion.div
+            key="sent"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+            className="rounded-lg border border-ink-200 bg-card px-3.5 py-3 flex items-start gap-3"
+          >
+            <span
+              className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+              style={{ background: "var(--color-positive)" }}
+            >
+              <svg viewBox="0 0 10 10" className="w-2 h-2" fill="none">
+                <path d="M2 5.2 4 7l4-4.5" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            <div className="min-w-0">
+              <div className="text-[13px] text-ink-900 font-medium">Thanks, we have your note</div>
+              <div className="text-[12px] text-ink-500 mt-0.5 leading-snug">
+                A team member will reach out within 24 hours to help you complete this step.
+              </div>
+            </div>
+          </motion.div>
+        ) : escapeOpen ? (
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+            className="rounded-lg border border-ink-200 bg-card p-3.5 space-y-2.5"
+          >
+            <div className="text-[13px] text-ink-900 font-medium">
+              Tell us why so we can help
+            </div>
+            <textarea
+              autoFocus
+              value={escapeText}
+              onChange={(e) => setEscapeText(e.target.value)}
+              placeholder="For example: my business is only three months old, my bank only releases statements quarterly, I recently switched banks..."
+              rows={3}
+              maxLength={500}
+              className="w-full text-[13px] text-ink-900 placeholder:text-ink-400 border border-ink-300 rounded-md px-2.5 py-2 leading-snug focus:outline-none focus:border-accent resize-none"
+            />
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] text-ink-400 tabular-nums">
+                {escapeText.length}/500
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEscapeOpen(false);
+                    setEscapeText("");
+                  }}
+                  className="text-[12.5px] text-ink-500 hover:text-ink-900 px-3 py-1.5"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={submitEscape}
+                  disabled={!escapeText.trim()}
+                  className="text-[12.5px] font-medium px-3.5 py-1.5 rounded-full bg-ink-900 text-white hover:bg-accent disabled:bg-ink-200 disabled:text-ink-400 disabled:cursor-not-allowed transition-colors"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="link"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+            className="flex items-center justify-end text-[12px]"
+          >
+            <button
+              type="button"
+              onClick={() => setEscapeOpen(true)}
+              className="text-ink-500 hover:text-ink-900 transition-colors underline decoration-dotted underline-offset-4"
+            >
+              I cannot provide six months of statements →
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
