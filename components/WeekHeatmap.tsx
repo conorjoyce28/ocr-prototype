@@ -13,8 +13,6 @@ function statusClass(status: MonthStatus): string {
   switch (status) {
     case "covered":
       return "bg-accent border-accent";
-    case "parsing":
-      return "bg-ink-100 border-ink-300 shimmer";
     case "failed":
       return "border-[var(--color-gap)]";
     default:
@@ -91,8 +89,6 @@ function MonthGroup({ cell }: { cell: MonthCell }) {
           className={`text-[11.5px] tabular-nums tracking-tight ${
             cell.status === "covered"
               ? "text-ink-900 font-medium"
-              : cell.status === "parsing"
-              ? "text-accent font-medium"
               : cell.status === "failed"
               ? "text-[var(--color-gap)] font-medium"
               : "text-ink-500"

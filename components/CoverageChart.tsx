@@ -144,7 +144,7 @@ export function CoverageChart({ cells }: Props) {
           />
 
           {monthBounds.map((mb) => {
-            if (mb.cell.status !== "missing") return null;
+            if (mb.cell.status !== "missing" && mb.cell.status !== "parsing") return null;
             return (
               <motion.g
                 key={`gap-${mb.cell.key}`}
@@ -177,33 +177,6 @@ export function CoverageChart({ cells }: Props) {
             );
           })}
 
-          {monthBounds.map((mb) => {
-            if (mb.cell.status !== "parsing") return null;
-            return (
-              <g key={`parsing-${mb.cell.key}`} className="shimmer">
-                <rect
-                  x={mb.xStart + 8}
-                  y={PAD_T + 6}
-                  width={monthWidth - 16}
-                  height={PLOT_H - 12}
-                  fill="var(--color-ink-100)"
-                  rx={6}
-                />
-                <rect
-                  x={mb.xStart + 8}
-                  y={PAD_T + 6}
-                  width={monthWidth - 16}
-                  height={PLOT_H - 12}
-                  fill="none"
-                  stroke="var(--color-ink-300)"
-                  strokeWidth={1.5}
-                  strokeDasharray="6 5"
-                  rx={6}
-                  className="dash-march"
-                />
-              </g>
-            );
-          })}
 
           {monthBounds.map((mb) => {
             if (mb.cell.status !== "failed") return null;
@@ -280,8 +253,6 @@ export function CoverageChart({ cells }: Props) {
                 fill={
                   mb.cell.status === "covered"
                     ? "var(--color-ink-900)"
-                    : mb.cell.status === "parsing"
-                    ? "var(--color-accent)"
                     : mb.cell.status === "failed"
                     ? "var(--color-gap)"
                     : "var(--color-ink-500)"
