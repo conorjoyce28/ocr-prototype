@@ -103,7 +103,7 @@ export function InlineUploader({
                   />
                 </svg>
               </div>
-              <div className="text-[14px] text-ink-900 font-medium">
+              <div className="text-body-sm text-ink-900 font-medium">
                 {allCovered ? (
                   "Coverage complete"
                 ) : (
@@ -112,7 +112,7 @@ export function InlineUploader({
                   </>
                 )}
               </div>
-              <div className="text-[12px] text-ink-500 mt-1">
+              <div className="text-body-xs text-ink-500 mt-1">
                 {allCovered ? "All six months covered." : "PDF, PNG, TIFF or JPG"}
               </div>
             </motion.div>
@@ -136,15 +136,15 @@ export function InlineUploader({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="min-w-0">
-                          <div className="text-[13px] text-ink-900 font-medium truncate">
+                          <div className="text-body-sm text-ink-900 font-medium truncate">
                             {file.fileName}
                           </div>
-                          <div className="text-[11.5px] text-ink-500 mt-0.5 tabular-nums">
+                          <div className="text-caption text-ink-500 mt-0.5 tabular-nums">
                             {file.sizeKb.toFixed(1)} KB · {file.spanMonths} month
                             {file.spanMonths > 1 ? "s" : ""}
                           </div>
                         </div>
-                        <span className="text-[11px] uppercase tracking-[0.1em] text-accent font-medium shrink-0">
+                        <span className="text-caption uppercase tracking-[0.1em] text-accent font-medium shrink-0">
                           Reading
                         </span>
                       </div>
@@ -161,10 +161,10 @@ export function InlineUploader({
       {settledFiles.length > 0 && (
         <div className="space-y-2.5">
           <div className="flex items-baseline justify-between">
-            <h4 className="text-[13px] font-medium text-ink-900">
+            <h4 className="text-body-sm font-medium text-ink-900">
               Uploaded statements
             </h4>
-            <span className="text-[11.5px] text-ink-500 tabular-nums">
+            <span className="text-caption text-ink-500 tabular-nums">
               {settledFiles.length} file{settledFiles.length > 1 ? "s" : ""}
             </span>
           </div>
@@ -199,8 +199,8 @@ export function InlineUploader({
               </svg>
             </span>
             <div className="min-w-0">
-              <div className="text-[13px] text-ink-900 font-medium">Thanks, we have your note</div>
-              <div className="text-[12px] text-ink-500 mt-0.5 leading-snug">
+              <div className="text-body-sm text-ink-900 font-medium">Thanks, we have your note</div>
+              <div className="text-body-xs text-ink-500 mt-0.5 leading-snug">
                 A team member will reach out within 24 hours to help you complete this step.
               </div>
             </div>
@@ -214,7 +214,7 @@ export function InlineUploader({
             transition={{ duration: 0.2 }}
             className="rounded-lg border border-ink-200 bg-card p-3.5 space-y-2.5"
           >
-            <div className="text-[13px] text-ink-900 font-medium">
+            <div className="text-body-sm text-ink-900 font-medium">
               Tell us why so we can help
             </div>
             <textarea
@@ -224,10 +224,10 @@ export function InlineUploader({
               placeholder="For example: my business is only three months old, my bank only releases statements quarterly, I recently switched banks..."
               rows={3}
               maxLength={500}
-              className="w-full text-[13px] text-ink-900 placeholder:text-ink-400 border border-ink-300 rounded-md px-2.5 py-2 leading-snug focus:outline-none focus:border-accent resize-none"
+              className="w-full text-body-sm text-ink-900 placeholder:text-ink-400 border border-ink-300 rounded-md px-2.5 py-2 leading-snug focus:outline-none focus:border-accent resize-none"
             />
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[11px] text-ink-400 tabular-nums">
+              <span className="text-caption text-ink-400 tabular-nums">
                 {escapeText.length}/500
               </span>
               <div className="flex items-center gap-2">
@@ -237,7 +237,7 @@ export function InlineUploader({
                     setEscapeOpen(false);
                     setEscapeText("");
                   }}
-                  className="text-[12.5px] text-ink-500 hover:text-ink-900 px-3 py-1.5"
+                  className="text-body-xs text-ink-500 hover:text-ink-900 px-3 py-1.5"
                 >
                   Cancel
                 </button>
@@ -245,7 +245,7 @@ export function InlineUploader({
                   type="button"
                   onClick={submitEscape}
                   disabled={!escapeText.trim()}
-                  className="text-[12.5px] font-medium px-3.5 py-1.5 rounded-full bg-ink-900 text-white hover:bg-accent disabled:bg-ink-200 disabled:text-ink-400 disabled:cursor-not-allowed transition-colors"
+                  className="text-body-xs font-medium px-3.5 py-1.5 rounded-full bg-ink-900 text-white hover:bg-accent disabled:bg-ink-200 disabled:text-ink-400 disabled:cursor-not-allowed transition-colors"
                 >
                   Send
                 </button>
@@ -258,7 +258,7 @@ export function InlineUploader({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2 }}
-            className="flex items-center justify-end text-[12px]"
+            className="flex items-center justify-end text-body-xs"
           >
             <button
               type="button"
@@ -303,13 +303,13 @@ function FileRow({ file, onRemove }: { file: UploadedFile; onRemove: (id: string
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <div className="text-[13px] text-ink-900 font-medium truncate">{file.fileName}</div>
-          <div className="text-[11px] text-ink-500 tabular-nums shrink-0">
+          <div className="text-body-sm text-ink-900 font-medium truncate">{file.fileName}</div>
+          <div className="text-caption text-ink-500 tabular-nums shrink-0">
             {file.sizeKb.toFixed(1)} KB
           </div>
         </div>
         {file.extracted && !failed && (
-          <div className="mt-0.5 text-[12px] text-ink-500 leading-snug">
+          <div className="mt-0.5 text-body-xs text-ink-500 leading-snug">
             <span className="text-ink-700">{file.extracted.accountName}</span>{" "}
             <span className="text-ink-400">·</span>{" "}
             {file.extracted.accountType}{" "}
@@ -328,7 +328,7 @@ function FileRow({ file, onRemove }: { file: UploadedFile; onRemove: (id: string
           </div>
         )}
         {failed && (
-          <div className="mt-0.5 text-[12px] text-[var(--color-gap)] leading-snug">
+          <div className="mt-0.5 text-body-xs text-[var(--color-gap)] leading-snug">
             {file.failureReason ?? "Couldn't accept this statement."}
           </div>
         )}

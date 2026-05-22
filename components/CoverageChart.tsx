@@ -95,11 +95,11 @@ export function CoverageChart({ cells }: Props) {
   return (
     <div className="relative w-full">
       <div className="relative rounded-2xl border border-ink-200 bg-card overflow-hidden">
-        <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 text-[11px] text-ink-900 bg-card border border-ink-200 px-2.5 py-1 rounded-full tabular-nums">
+        <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 text-caption text-ink-900 bg-card border border-ink-200 px-2.5 py-1 rounded-full tabular-nums">
           <span className="text-accent font-medium">{covered}</span>
           <span className="text-ink-400">of {cells.length} months covered</span>
         </div>
-        <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.12em] text-ink-500 bg-ink-100 px-2 py-1 rounded-full">
+        <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1.5 text-micro uppercase tracking-[0.12em] text-ink-500 bg-ink-100 px-2 py-1 rounded-full">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-ink-400 shimmer" />
           Sample preview
         </span>
@@ -280,7 +280,7 @@ export function CoverageChart({ cells }: Props) {
         </svg>
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11.5px] text-ink-500">
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-caption text-ink-500">
         <div className="flex items-center gap-2">
           <span className="inline-block w-3 h-[2px] bg-accent rounded-full" />
           <span>Covered (mock)</span>

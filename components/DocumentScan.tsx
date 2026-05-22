@@ -118,7 +118,7 @@ export function DocumentScan({ file }: Props) {
           </div>
         )}
       </div>
-      <div className="mt-2 text-[10.5px] text-ink-500 leading-tight text-center truncate">
+      <div className="mt-2 text-micro text-ink-500 leading-tight text-center truncate">
         {parsing ? "Scanning…" : done ? "Scanned" : failed ? "Couldn't read" : "Ready"}
       </div>
     </div>

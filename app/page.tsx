@@ -108,10 +108,10 @@ export default function Page() {
         <TopBar />
         <div className="flex-1 px-10 lg:px-16 py-10 lg:py-12">
           <div className="max-w-[920px]">
-            <h1 className="text-[34px] leading-[1.1] tracking-tight text-ink-900 font-medium">
+            <h1 className="text-title-lg leading-[1.1] tracking-tight text-ink-900 font-medium">
               Connect all your bank accounts
             </h1>
-            <p className="mt-2 text-[15px] text-ink-500">
+            <p className="mt-2 text-body-sm text-ink-500">
               We use your banking data to assess your application and build your offer.
             </p>
 
@@ -144,7 +144,7 @@ export default function Page() {
               />
             </div>
 
-            <div className="mt-6 text-[13px] text-ink-700">
+            <div className="mt-6 text-body-sm text-ink-700">
               <span className="font-medium">Need help connecting? </span>
               <a className="text-accent hover:underline" href="#" onClick={(e) => e.preventDefault()}>
                 Invite a team member
@@ -179,7 +179,7 @@ function LeftRail() {
   return (
     <aside className="w-[320px] shrink-0 border-r border-ink-200 bg-card px-7 py-8 flex flex-col">
       <div className="flex items-center mb-9">
-        <span className="text-[22px] tracking-tight font-semibold text-ink-900">Wayflyer</span>
+        <span className="text-title-sm tracking-tight font-semibold text-ink-900">Wayflyer</span>
       </div>
 
       <div className="mb-8 h-1 rounded-full bg-ink-100 overflow-hidden">
@@ -197,10 +197,10 @@ function LeftRail() {
         <StepperItem state="done" label="Monthly revenue" />
         <StepperItem state="done" label="Business details" />
         <StepperItem state="active" label="Connections and data" expanded>
-          <p className="text-[12.5px] text-ink-500 leading-snug mt-2 mb-1">
+          <p className="text-body-xs text-ink-500 leading-snug mt-2 mb-1">
             We use your data to understand your business&apos;s financial health.
           </p>
-          <p className="text-[12px] text-ink-500 mb-3">Avg. 6 min.</p>
+          <p className="text-body-xs text-ink-500 mb-3">Avg. 6 min.</p>
           <div className="ml-1 border-l border-ink-200 pl-4 space-y-3">
             <SubStep state="active" label="Bank accounts" />
             <SubStep state="idle" label="Platforms" />
@@ -208,7 +208,7 @@ function LeftRail() {
         </StepperItem>
       </nav>
 
-      <div className="mt-8 pt-6 border-t border-ink-200 text-[12.5px] space-y-2">
+      <div className="mt-8 pt-6 border-t border-ink-200 text-body-xs space-y-2">
         <div className="text-ink-500 font-medium">Having trouble?</div>
         <p className="text-ink-500 leading-snug">
           Learn more about why we need to{" "}
@@ -217,7 +217,7 @@ function LeftRail() {
           </a>
           .
         </p>
-        <div className="pt-3 text-[11.5px] text-ink-500 flex items-center gap-2">
+        <div className="pt-3 text-caption text-ink-500 flex items-center gap-2">
           <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-ink-900">Terms of Business</a>
           <span className="text-ink-300">·</span>
           <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-ink-900">Privacy Policy</a>
@@ -245,10 +245,10 @@ function StepperItem({
         <span
           className={
             state === "active"
-              ? "text-[14px] text-ink-900 font-medium"
+              ? "text-body-sm text-ink-900 font-medium"
               : state === "done"
-              ? "text-[14px] text-ink-700"
-              : "text-[14px] text-ink-500"
+              ? "text-body-sm text-ink-700"
+              : "text-body-sm text-ink-500"
           }
         >
           {label}
@@ -290,7 +290,7 @@ function SubStep({ state, label }: { state: "active" | "idle"; label: string }) 
       ) : (
         <span className="w-2.5 h-2.5 rounded-full border-[1.5px] border-ink-300" />
       )}
-      <span className={state === "active" ? "text-[13px] text-ink-900 font-medium" : "text-[13px] text-ink-500"}>
+      <span className={state === "active" ? "text-body-sm text-ink-900 font-medium" : "text-body-sm text-ink-500"}>
         {label}
       </span>
     </div>
@@ -311,7 +311,7 @@ function TopBar() {
           <path d="M3 11a7 7 0 0 1 14 0v3a2 2 0 0 1-2 2h-1v-5h3M3 11v3a2 2 0 0 0 2 2h1v-5H3" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
         </svg>
       </IconButton>
-      <div className="ml-2 w-8 h-8 rounded-full bg-ink-100 flex items-center justify-center text-[11.5px] font-medium text-ink-700 tracking-wide">
+      <div className="ml-2 w-8 h-8 rounded-full bg-ink-100 flex items-center justify-center text-caption font-medium text-ink-700 tracking-wide">
         WD
       </div>
     </div>
@@ -333,10 +333,10 @@ function IconButton({ children, label }: { children: React.ReactNode; label: str
 function BottomBar() {
   return (
     <div className="border-t border-ink-200 px-10 lg:px-16 py-5 flex items-center justify-between bg-paper">
-      <button className="px-4 py-2 rounded-full border border-ink-300 text-[13px] text-ink-900 hover:bg-ink-100 transition-colors">
+      <button className="px-4 py-2 rounded-full border border-ink-300 text-body-sm text-ink-900 hover:bg-ink-100 transition-colors">
         Business model
       </button>
-      <button className="px-5 py-2.5 rounded-full bg-accent text-white text-[13px] font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
+      <button className="px-5 py-2.5 rounded-full bg-accent text-white text-body-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
         Platforms
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M2 7h10m0 0-3.5-3.5M12 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
@@ -372,20 +372,20 @@ function OptionCard({
   return (
     <div className={`rounded-xl bg-card border ${border} px-5 pt-4 pb-5 flex flex-col`}>
       <div className="flex items-start justify-between gap-2 mb-3">
-        <span className="text-[11px] uppercase tracking-[0.14em] text-ink-500">{tag}</span>
+        <span className="text-caption uppercase tracking-[0.14em] text-ink-500">{tag}</span>
         {variant === "in-progress" && (
-          <span className="text-[10.5px] uppercase tracking-[0.12em] font-medium px-2 py-1 rounded-full bg-accent-soft text-accent">
+          <span className="text-micro uppercase tracking-[0.12em] font-medium px-2 py-1 rounded-full bg-accent-soft text-accent">
             In progress
           </span>
         )}
       </div>
-      <div className="text-[18px] tracking-tight text-ink-900 font-medium leading-tight">{title}</div>
-      <div className="mt-1 text-[12.5px] text-ink-500 leading-snug">{subtitle}</div>
+      <div className="text-title-xs tracking-tight text-ink-900 font-medium leading-tight">{title}</div>
+      <div className="mt-1 text-body-xs text-ink-500 leading-snug">{subtitle}</div>
       {preview && <div className="mt-4">{preview}</div>}
       <button
         type="button"
         onClick={onClick}
-        className={`mt-5 w-full py-2.5 rounded-full text-[13px] font-medium transition-colors ${
+        className={`mt-5 w-full py-2.5 rounded-full text-body-sm font-medium transition-colors ${
           variant === "primary"
             ? "border border-accent text-accent hover:bg-accent-soft"
             : "border border-ink-300 text-ink-900 hover:border-ink-900 hover:bg-ink-100"

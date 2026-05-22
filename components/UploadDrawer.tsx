@@ -88,17 +88,17 @@ export function UploadDrawer({
                 </svg>
               </button>
               <div className="min-w-0">
-                <h2 className="text-[20px] leading-tight font-medium text-ink-900 tracking-tight">
+                <h2 className="text-title-sm leading-tight font-medium text-ink-900 tracking-tight">
                   Upload bank statements
                 </h2>
-                <div className="text-[11px] uppercase tracking-[0.14em] text-ink-500 mt-0.5">
+                <div className="text-caption uppercase tracking-[0.14em] text-ink-500 mt-0.5">
                   {visualization === "calendar" ? "Calendar view" : "Line diagram"}
                 </div>
               </div>
               <button
                 type="button"
                 onClick={onReset}
-                className="ml-auto text-[12px] text-ink-500 hover:text-ink-900 transition-colors underline decoration-dotted underline-offset-4"
+                className="ml-auto text-body-xs text-ink-500 hover:text-ink-900 transition-colors underline decoration-dotted underline-offset-4"
                 title="Reset demo state"
               >
                 Reset
@@ -106,7 +106,7 @@ export function UploadDrawer({
             </header>
 
             <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5">
-              <p className="text-[16px] leading-[1.4] text-ink-900 font-medium">
+              <p className="text-body-md leading-[1.4] text-ink-900 font-medium">
                 Six months of continuous data, one transaction every 14 days, across all bank
                 accounts.
               </p>
@@ -127,9 +127,9 @@ export function UploadDrawer({
               />
             </div>
 
-            <div className="border-t border-dashed border-ink-200 bg-ink-50 px-6 py-2.5 flex items-center justify-between gap-3 text-[12px] shrink-0">
+            <div className="border-t border-dashed border-ink-200 bg-ink-50 px-6 py-2.5 flex items-center justify-between gap-3 text-body-xs shrink-0">
               <div className="flex items-center gap-2 min-w-0">
-                <span className="text-[10px] uppercase tracking-[0.14em] text-ink-500 font-medium shrink-0">
+                <span className="text-micro uppercase tracking-[0.14em] text-ink-500 font-medium shrink-0">
                   Demo
                 </span>
                 <span className="text-ink-300 shrink-0">·</span>
@@ -138,7 +138,7 @@ export function UploadDrawer({
                   <select
                     value={demoSpan}
                     onChange={(e) => setDemoSpan(parseInt(e.target.value, 10))}
-                    className="text-[12px] border border-ink-300 rounded-md px-2 py-1 bg-card text-ink-900 font-medium tabular-nums focus:outline-none focus:border-accent"
+                    className="text-body-xs border border-ink-300 rounded-md px-2 py-1 bg-card text-ink-900 font-medium tabular-nums focus:outline-none focus:border-accent"
                   >
                     {[1, 2, 3, 4, 5, 6].map((n) => (
                       <option key={n} value={n}>
@@ -153,7 +153,7 @@ export function UploadDrawer({
                   type="button"
                   onClick={() => handleDemoDrop(false)}
                   disabled={allCovered}
-                  className="text-[12px] font-medium text-accent hover:text-[color:var(--color-accent-deep)] px-2 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="text-body-xs font-medium text-accent hover:text-[color:var(--color-accent-deep)] px-2 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Drop sample
                 </button>
@@ -162,7 +162,7 @@ export function UploadDrawer({
                   type="button"
                   onClick={() => handleDemoDrop(true)}
                   disabled={allCovered}
-                  className="text-[12px] font-medium text-[var(--color-gap)] hover:opacity-80 px-2 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="text-body-xs font-medium text-[var(--color-gap)] hover:opacity-80 px-2 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Drop failure
                 </button>
@@ -170,7 +170,7 @@ export function UploadDrawer({
             </div>
 
             <footer className="border-t border-ink-200 px-6 h-[80px] flex items-center justify-between bg-card shrink-0">
-              <div className="text-[12.5px] text-ink-500 tabular-nums">
+              <div className="text-body-xs text-ink-500 tabular-nums">
                 <span className="text-ink-900 font-medium">{covered}</span>
                 <span> of {total} months covered</span>
               </div>
@@ -178,7 +178,7 @@ export function UploadDrawer({
                 type="button"
                 onClick={onClose}
                 disabled={!allCovered}
-                className="px-5 h-10 rounded-full text-[13.5px] font-medium transition-colors disabled:bg-ink-100 disabled:text-ink-300 disabled:cursor-not-allowed bg-accent text-white hover:opacity-90"
+                className="px-5 h-10 rounded-full text-body-sm font-medium transition-colors disabled:bg-ink-100 disabled:text-ink-300 disabled:cursor-not-allowed bg-accent text-white hover:opacity-90"
               >
                 Submit statements
               </button>

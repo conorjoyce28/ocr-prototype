@@ -72,7 +72,7 @@ export function ParseAnimation({ file, onComplete }: Props) {
           else state = "pending";
           if (willFail && i > FAIL_AT_INDEX) state = "pending";
           return (
-            <div key={step.label} className="flex items-center gap-2.5 text-[13px]">
+            <div key={step.label} className="flex items-center gap-2.5 text-body-sm">
               <StepDot state={state} />
               <span
                 className={
@@ -118,7 +118,7 @@ export function ParseAnimation({ file, onComplete }: Props) {
             transition={{ duration: 0.4, delay: 0.05 }}
             className="pt-3 mt-3 border-t border-ink-200"
           >
-            <div className="flex items-start gap-2.5 text-[13px]">
+            <div className="flex items-start gap-2.5 text-body-sm">
               <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full mt-0.5" style={{ background: "var(--color-gap-soft)" }}>
                 <svg viewBox="0 0 10 10" className="w-2 h-2" fill="none">
                   <path d="M3 3l4 4M7 3l-4 4" stroke="var(--color-gap)" strokeWidth="1.8" strokeLinecap="round" />
@@ -172,7 +172,7 @@ function Confirm({ label, value, delay }: { label: string; value: string; delay:
       initial={{ opacity: 0, x: -6 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay }}
-      className="flex items-center justify-between gap-3 text-[13px]"
+      className="flex items-center justify-between gap-3 text-body-sm"
     >
       <div className="flex items-center gap-2.5 text-ink-700">
         <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full" style={{ background: "var(--color-positive-soft)" }}>

@@ -14,7 +14,7 @@ export function MonthProgressBar({ cells }: Props) {
   return (
     <div className="relative w-full">
       <div className="relative rounded-2xl border border-ink-200 bg-card px-6 pt-12 pb-6">
-        <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 text-[11px] text-ink-900 bg-card border border-ink-200 px-2.5 py-1 rounded-full tabular-nums">
+        <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 text-caption text-ink-900 bg-card border border-ink-200 px-2.5 py-1 rounded-full tabular-nums">
           <span className="text-accent font-medium">{covered}</span>
           <span className="text-ink-400">of {cells.length} months covered</span>
         </div>
@@ -62,7 +62,7 @@ export function MonthProgressBar({ cells }: Props) {
             return (
               <div key={cell.key} className="flex-1 text-center px-1">
                 <div
-                  className={`text-[11.5px] tabular-nums tracking-tight ${
+                  className={`text-caption tabular-nums tracking-tight ${
                     isCovered
                       ? "text-ink-900 font-medium"
                       : isFailed
@@ -72,10 +72,10 @@ export function MonthProgressBar({ cells }: Props) {
                 >
                   {cell.label}
                 </div>
-                <div className="text-[9.5px] text-ink-400 tracking-[0.04em]">{cell.year}</div>
+                <div className="text-micro text-ink-400 tracking-[0.04em]">{cell.year}</div>
                 {!isCovered && (
                   <div
-                    className={`mt-1 text-[10px] font-medium uppercase tracking-[0.08em] ${
+                    className={`mt-1 text-micro font-medium uppercase tracking-[0.08em] ${
                       isFailed ? "text-[var(--color-gap)]" : "text-ink-400"
                     }`}
                   >

@@ -31,6 +31,43 @@
   --color-gap: #d92d20;
   --color-gap-soft: #fff1f0;
 
+  /* Type scale — Wayflyer DS tokens. text-{name} sets font-size, line-height, letter-spacing and font-weight together. */
+  --text-body-xs: 12px;
+  --text-body-xs--line-height: 1.4;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 1.4;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 1.4;
+
+  --text-label-xs: 12px;
+  --text-label-xs--line-height: 1;
+  --text-label-sm: 14px;
+  --text-label-sm--line-height: 1;
+  --text-label-md: 16px;
+  --text-label-md--line-height: 1;
+
+  --text-title-xs: 18px;
+  --text-title-xs--line-height: 1.2;
+  --text-title-xs--font-weight: 500;
+  --text-title-sm: 20px;
+  --text-title-sm--line-height: 1.2;
+  --text-title-sm--font-weight: 500;
+  --text-title-md: 24px;
+  --text-title-md--line-height: 1.2;
+  --text-title-md--font-weight: 500;
+  --text-title-md--letter-spacing: -0.021em;
+  --text-title-lg: 32px;
+  --text-title-lg--line-height: 1.2;
+  --text-title-lg--font-weight: 500;
+  --text-title-lg--letter-spacing: -0.016em;
+
+  /* Caption/micro — sub-body sizes used for chips and decorative chrome, not in core DS but harmonised. */
+  --text-caption: 11px;
+  --text-caption--line-height: 1.3;
+  --text-micro: 10px;
+  --text-micro--line-height: 1.2;
+  --text-micro--letter-spacing: 0.04em;
+
   /* Radii from DS */
   --radius-sm: 4px;
   --radius-md: 8px;
