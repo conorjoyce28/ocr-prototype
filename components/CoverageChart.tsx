@@ -180,13 +180,13 @@ export function CoverageChart({ cells }: Props) {
           {monthBounds.map((mb) => {
             if (mb.cell.status !== "parsing") return null;
             return (
-              <g key={`parsing-${mb.cell.key}`}>
+              <g key={`parsing-${mb.cell.key}`} className="shimmer">
                 <rect
                   x={mb.xStart + 8}
                   y={PAD_T + 6}
                   width={monthWidth - 16}
                   height={PLOT_H - 12}
-                  fill="var(--color-accent-soft)"
+                  fill="var(--color-ink-100)"
                   rx={6}
                 />
                 <rect
@@ -195,11 +195,11 @@ export function CoverageChart({ cells }: Props) {
                   width={monthWidth - 16}
                   height={PLOT_H - 12}
                   fill="none"
-                  stroke="var(--color-accent)"
+                  stroke="var(--color-ink-300)"
                   strokeWidth={1.5}
                   strokeDasharray="6 5"
                   rx={6}
-                  className="dash-march shimmer"
+                  className="dash-march"
                 />
               </g>
             );

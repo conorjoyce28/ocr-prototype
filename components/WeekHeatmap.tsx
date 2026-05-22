@@ -14,7 +14,7 @@ function statusClass(status: MonthStatus): string {
     case "covered":
       return "bg-accent border-accent";
     case "parsing":
-      return "bg-accent-soft border-accent shimmer";
+      return "bg-ink-100 border-ink-300 shimmer";
     case "failed":
       return "border-[var(--color-gap)]";
     default:
