@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { UploadDrawer, type DrawerVisualization } from "@/components/UploadDrawer";
+import { useCallback, useEffect, useState } from "react";
+import { UploadDrawer } from "@/components/UploadDrawer";
 import { buildGoalWindow, findFirstUploadableRun } from "@/lib/months";
 import { extractedFor, pickFailureReason, resetAccountCursor } from "@/lib/fixtures";
 import type { MonthCell, UploadedFile, UploadOptions } from "@/lib/types";
@@ -14,10 +14,9 @@ export default function Page() {
   );
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [visualization, setVisualization] = useState<DrawerVisualization>("line");
+  const [bankModalOpen, setBankModalOpen] = useState(false);
 
-  const openDrawer = useCallback((viz: DrawerVisualization) => {
-    setVisualization(viz);
+  const openDrawer = useCallback(() => {
     setDrawerOpen(true);
   }, []);
 
@@ -115,31 +114,22 @@ export default function Page() {
               We use your banking data to assess your application and build your offer.
             </p>
 
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
               <OptionCard
                 tag="Recommended"
                 title="Connect your bank"
                 subtitle="Instant verification, usually under an hour."
                 cta="Manage accounts"
-                onClick={() => {}}
+                onClick={() => setBankModalOpen(true)}
                 variant="primary"
-              />
-              <OptionCard
-                tag="Line diagram"
-                title="Upload statements"
-                subtitle="See coverage as a transaction line across the six month window."
-                cta="Open line view"
-                onClick={() => openDrawer("line")}
-                variant={covered > 0 && visualization === "line" ? "in-progress" : "secondary"}
-                preview={<LinePreview />}
               />
               <OptionCard
                 tag="Calendar view"
                 title="Upload statements"
                 subtitle="See coverage as weekly blocks. Two empty blocks in a row is a 14 day gap."
                 cta="Open calendar view"
-                onClick={() => openDrawer("calendar")}
-                variant={covered > 0 && visualization === "calendar" ? "in-progress" : "secondary"}
+                onClick={openDrawer}
+                variant={covered > 0 ? "in-progress" : "secondary"}
                 preview={<CalendarPreview />}
               />
             </div>
@@ -162,7 +152,7 @@ export default function Page() {
 
       <UploadDrawer
         open={drawerOpen}
-        visualization={visualization}
+        visualization="calendar"
         onClose={() => setDrawerOpen(false)}
         cells={cells}
         files={files}
@@ -171,6 +161,83 @@ export default function Page() {
         onRemoveFile={handleRemoveFile}
         onReset={handleReset}
       />
+
+      <BankConnectModal open={bankModalOpen} onClose={() => setBankModalOpen(false)} />
+    </div>
+  );
+}
+
+function BankConnectModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div
+        onClick={onClose}
+        className="absolute inset-0"
+        style={{ background: "rgba(0, 0, 0, 0.08)" }}
+      />
+      <div
+        className="relative bg-card rounded-2xl w-full max-w-[440px] mx-4 p-7"
+        style={{ boxShadow: "var(--shadow-overlay-panel), var(--shadow-overlay-modal)" }}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-ink-100 text-ink-500 hover:text-ink-900 flex items-center justify-center transition-colors"
+        >
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+            <path d="M2 2l10 10M12 2 2 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+        </button>
+
+        <div className="flex items-center gap-3 mb-5">
+          <span className="w-9 h-9 rounded-full bg-accent-soft flex items-center justify-center">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M3 8 10 4l7 4M4 9v6m4-6v6m4-6v6m4-6v6M2 17h16" stroke="var(--color-accent)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+          <div>
+            <h2 className="text-title-sm leading-tight font-medium text-ink-900 tracking-tight">
+              Connect your bank
+            </h2>
+            <div className="text-caption uppercase tracking-[0.14em] text-ink-500 mt-0.5">
+              Placeholder
+            </div>
+          </div>
+        </div>
+
+        <p className="text-body-sm text-ink-700 leading-snug">
+          The live onboarding flow launches Plaid here to verify your account.
+        </p>
+
+        <div className="mt-5 flex items-center gap-2 text-body-xs text-ink-500">
+          <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <span>Connecting to your bank…</span>
+        </div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-6 w-full py-2.5 rounded-full bg-accent text-white text-body-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          Close
+        </button>
+      </div>
     </div>
   );
 }
@@ -393,26 +460,6 @@ function OptionCard({
       >
         {cta}
       </button>
-    </div>
-  );
-}
-
-function LinePreview() {
-  return (
-    <div className="rounded-md bg-ink-50 border border-ink-200 p-2 h-[58px] overflow-hidden">
-      <svg viewBox="0 0 120 36" className="w-full h-full">
-        <defs>
-          <linearGradient id="lp-fade" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d="M0 24 Q 10 12 20 18 T 40 14 T 60 22 L 60 36 L 0 36 Z" fill="url(#lp-fade)" />
-        <path d="M0 24 Q 10 12 20 18 T 40 14 T 60 22" stroke="var(--color-accent)" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-        <rect x="64" y="6" width="14" height="24" fill="var(--color-gap-soft)" stroke="var(--color-gap)" strokeWidth="1" strokeDasharray="3 2" rx="2" />
-        <rect x="80" y="6" width="14" height="24" fill="var(--color-gap-soft)" stroke="var(--color-gap)" strokeWidth="1" strokeDasharray="3 2" rx="2" />
-        <path d="M96 22 Q 104 16 112 18 L 120 18" stroke="var(--color-accent)" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-      </svg>
     </div>
   );
 }
