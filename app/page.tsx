@@ -1,10 +1,26 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { UploadDrawer } from "@/components/UploadDrawer";
+import { ConnectDrawer } from "@/components/ConnectDrawer";
 import { buildGoalWindow, findFirstUploadableRun } from "@/lib/months";
-import { extractedFor, pickFailureReason, resetAccountCursor } from "@/lib/fixtures";
-import type { MonthCell, UploadedFile, UploadOptions } from "@/lib/types";
+import {
+  connectionExtractedFor,
+  extractedFor,
+  nextBank,
+  pickConnectFailure,
+  pickFailureReason,
+  resetAccountCursor,
+  resetBankCursor,
+} from "@/lib/fixtures";
+import type {
+  BankConnection,
+  BankFixture,
+  ConnectOptions,
+  MonthCell,
+  UploadedFile,
+  UploadOptions,
+} from "@/lib/types";
 
 const TODAY = new Date(2026, 4, 21);
 
@@ -13,8 +29,9 @@ export default function Page() {
     buildGoalWindow(TODAY.getFullYear(), TODAY.getMonth(), 6)
   );
   const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [connections, setConnections] = useState<BankConnection[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [bankModalOpen, setBankModalOpen] = useState(false);
+  const [connectDrawerOpen, setConnectDrawerOpen] = useState(false);
 
   const openDrawer = useCallback(() => {
     setDrawerOpen(true);
@@ -92,10 +109,95 @@ export default function Page() {
     });
   }, []);
 
+  const handleConnect = useCallback(
+    (bank: BankFixture, options: ConnectOptions = {}) => {
+      setCells((prev) => {
+        const missing = prev.filter(
+          (c) => c.status === "missing" || c.status === "failed"
+        );
+        if (missing.length === 0) return prev;
+
+        const assignedKeys = missing.map((c) => c.key);
+        const extracted = connectionExtractedFor(missing);
+        const id = `c_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+
+        const newConnection: BankConnection = {
+          id,
+          bank,
+          accountName: extracted.account.name,
+          accountType: extracted.account.type,
+          accountTail: extracted.account.tail,
+          assignedMonthKeys: assignedKeys,
+          spanMonths: missing.length,
+          startedAt: Date.now(),
+          state: "connecting",
+          willFail: options.fail === true,
+          transactions: extracted.transactions,
+          periodLabel: extracted.periodLabel,
+        };
+        setConnections((cprev) => [...cprev, newConnection]);
+
+        return prev.map((c) =>
+          assignedKeys.includes(c.key) ? { ...c, status: "parsing" as const } : c
+        );
+      });
+    },
+    []
+  );
+
+  const handleConnectComplete = useCallback((connectionId: string) => {
+    setConnections((prev) => {
+      const c = prev.find((x) => x.id === connectionId);
+      if (!c) return prev;
+      const willFail = !!c.willFail;
+      const reason = pickConnectFailure(c.startedAt);
+
+      setCells((cellsPrev) =>
+        cellsPrev.map((cell) =>
+          c.assignedMonthKeys.includes(cell.key)
+            ? { ...cell, status: willFail ? ("failed" as const) : ("covered" as const) }
+            : cell
+        )
+      );
+
+      return prev.map((x) =>
+        x.id === connectionId
+          ? {
+              ...x,
+              state: willFail ? ("failed" as const) : ("connected" as const),
+              failureReason: willFail ? reason : undefined,
+            }
+          : x
+      );
+    });
+  }, []);
+
+  const handleRemoveConnection = useCallback((connectionId: string) => {
+    setConnections((prev) => {
+      const c = prev.find((x) => x.id === connectionId);
+      if (!c) return prev;
+      setCells((cellsPrev) =>
+        cellsPrev.map((cell) =>
+          c.assignedMonthKeys.includes(cell.key) ? { ...cell, status: "missing" as const } : cell
+        )
+      );
+      return prev.filter((x) => x.id !== connectionId);
+    });
+  }, []);
+
+  const handleDemoConnect = useCallback(
+    (fail = false) => {
+      handleConnect(nextBank(), { fail });
+    },
+    [handleConnect]
+  );
+
   const handleReset = useCallback(() => {
     setCells(buildGoalWindow(TODAY.getFullYear(), TODAY.getMonth(), 6));
     setFiles([]);
+    setConnections([]);
     resetAccountCursor();
+    resetBankCursor();
   }, []);
 
   const covered = cells.filter((c) => c.status === "covered").length;
@@ -120,8 +222,8 @@ export default function Page() {
                 title="Connect your bank"
                 subtitle="Instant verification, usually under an hour."
                 cta="Manage accounts"
-                onClick={() => setBankModalOpen(true)}
-                variant="primary"
+                onClick={() => setConnectDrawerOpen(true)}
+                variant={connections.length > 0 && !cells.every((c) => c.status === "covered") ? "in-progress" : "primary"}
               />
               <OptionCard
                 tag="Calendar view"
@@ -162,82 +264,17 @@ export default function Page() {
         onReset={handleReset}
       />
 
-      <BankConnectModal open={bankModalOpen} onClose={() => setBankModalOpen(false)} />
-    </div>
-  );
-}
-
-function BankConnectModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  useEffect(() => {
-    if (!open) return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [open, onClose]);
-
-  if (!open) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        onClick={onClose}
-        className="absolute inset-0"
-        style={{ background: "rgba(0, 0, 0, 0.08)" }}
+      <ConnectDrawer
+        open={connectDrawerOpen}
+        onClose={() => setConnectDrawerOpen(false)}
+        cells={cells}
+        connections={connections}
+        onConnect={handleConnect}
+        onConnectComplete={handleConnectComplete}
+        onRemove={handleRemoveConnection}
+        onReset={handleReset}
+        onDemoConnect={handleDemoConnect}
       />
-      <div
-        className="relative bg-card rounded-2xl w-full max-w-[440px] mx-4 p-7"
-        style={{ boxShadow: "var(--shadow-overlay-panel), var(--shadow-overlay-modal)" }}
-      >
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-ink-100 text-ink-500 hover:text-ink-900 flex items-center justify-center transition-colors"
-        >
-          <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-            <path d="M2 2l10 10M12 2 2 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-          </svg>
-        </button>
-
-        <div className="flex items-center gap-3 mb-5">
-          <span className="w-9 h-9 rounded-full bg-accent-soft flex items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-              <path d="M3 8 10 4l7 4M4 9v6m4-6v6m4-6v6m4-6v6M2 17h16" stroke="var(--color-accent)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </span>
-          <div>
-            <h2 className="text-title-sm leading-tight font-medium text-ink-900 tracking-tight">
-              Connect your bank
-            </h2>
-            <div className="text-caption uppercase tracking-[0.14em] text-ink-500 mt-0.5">
-              Placeholder
-            </div>
-          </div>
-        </div>
-
-        <p className="text-body-sm text-ink-700 leading-snug">
-          The live onboarding flow launches Plaid here to verify your account.
-        </p>
-
-        <div className="mt-5 flex items-center gap-2 text-body-xs text-ink-500">
-          <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse" />
-          <span>Connecting to your bank…</span>
-        </div>
-
-        <button
-          type="button"
-          onClick={onClose}
-          className="mt-6 w-full py-2.5 rounded-full bg-accent text-white text-body-sm font-medium hover:opacity-90 transition-opacity"
-        >
-          Close
-        </button>
-      </div>
     </div>
   );
 }

@@ -37,3 +37,32 @@ export interface UploadOptions {
   span?: number;
   fail?: boolean;
 }
+
+export type ConnectionState = "connecting" | "connected" | "failed";
+
+export interface BankFixture {
+  id: string;
+  name: string;
+  initials: string;
+  color: string;
+}
+
+export interface BankConnection {
+  id: string;
+  bank: BankFixture;
+  accountName: string;
+  accountType: string;
+  accountTail: string;
+  assignedMonthKeys: MonthKey[];
+  spanMonths: number;
+  startedAt: number;
+  state: ConnectionState;
+  willFail?: boolean;
+  failureReason?: string;
+  transactions?: number;
+  periodLabel?: string;
+}
+
+export interface ConnectOptions {
+  fail?: boolean;
+}
